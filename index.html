@@ -1,0 +1,275 @@
+<!doctype html>
+<html lang="ar" dir="rtl" data-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>مصمم إيصالات التوصيل والملصقات</title>
+  <meta name="description" content="Visual designer for delivery receipts, shipping labels and package stickers. Works offline in the browser.">
+  <link rel="icon" href="assets/icons/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/editor.css">
+  <link rel="stylesheet" href="css/responsive.css">
+  <link rel="stylesheet" href="css/print.css">
+  <style id="page-size-style">@page { size: A4; margin: 0; }</style>
+</head>
+<body>
+  <div id="splash" class="splash"><div class="spinner"></div><div class="splash-text">Loading…</div></div>
+
+  <div id="app" class="app" hidden>
+    <!-- Top bar -->
+    <header class="topbar">
+      <div class="brand">
+        <img src="assets/icons/favicon.svg" alt="" class="brand-logo">
+        <div class="brand-text">
+          <strong data-i18n="appName">مصمم الإيصالات</strong>
+          <span class="muted small" data-i18n="appTagline">إيصالات وملصقات شحن</span>
+        </div>
+      </div>
+      <nav class="tabs" id="main-tabs" role="tablist">
+        <button class="tab" data-view="designer" data-i18n="nav.designer">المصمم</button>
+        <button class="tab" data-view="data" data-i18n="nav.data">إدخال البيانات</button>
+        <button class="tab" data-view="orders" data-i18n="nav.orders">الطلبات</button>
+        <button class="tab" data-view="templates" data-i18n="nav.templates">القوالب</button>
+        <button class="tab" data-view="print" data-i18n="nav.print">الطباعة</button>
+        <button class="tab" data-view="settings" data-i18n="nav.settings">الإعدادات</button>
+      </nav>
+      <div class="topbar-actions">
+        <span class="save-state" id="save-state" data-i18n="saved">محفوظ</span>
+        <button class="icon-btn" id="btn-save" data-i18n-title="saveTip" title="حفظ (Ctrl+S)" data-icon="save"></button>
+        <button class="icon-btn" id="btn-print-quick" data-i18n-title="printTip" title="طباعة (Ctrl+P)" data-icon="printer"></button>
+        <button class="icon-btn" id="btn-lang" title="English / العربية" data-icon="globe"></button>
+        <button class="icon-btn" id="btn-theme" data-i18n-title="themeTip" title="الوضع الليلي" data-icon="moon"></button>
+      </div>
+    </header>
+
+    <main class="views">
+      <!-- ============ DESIGNER ============ -->
+      <section class="view" id="view-designer">
+        <aside class="ed-left panel" id="ed-left">
+          <div class="panel-head">
+            <span data-i18n="elements">العناصر</span>
+          </div>
+          <div class="palette" id="palette"></div>
+          <div class="panel-head">
+            <span data-i18n="layers">الطبقات</span>
+            <span class="muted small" id="layer-count"></span>
+          </div>
+          <ul class="layers" id="layers"></ul>
+        </aside>
+
+        <div class="ed-center">
+          <div class="ed-toolbar" id="ed-toolbar">
+            <div class="tb-group">
+              <select id="ed-template-select" class="tb-select" data-i18n-title="currentTemplate"></select>
+            </div>
+            <div class="tb-group">
+              <button class="icon-btn" data-cmd="undo" data-icon="undo" data-i18n-title="undo"></button>
+              <button class="icon-btn" data-cmd="redo" data-icon="redo" data-i18n-title="redo"></button>
+            </div>
+            <div class="tb-group">
+              <button class="icon-btn" data-cmd="zoomOut" data-icon="zoomOut" data-i18n-title="zoomOut"></button>
+              <button class="tb-zoom" data-cmd="zoomReset" id="zoom-label">100%</button>
+              <button class="icon-btn" data-cmd="zoomIn" data-icon="zoomIn" data-i18n-title="zoomIn"></button>
+              <button class="icon-btn" data-cmd="zoomFit" data-icon="maximize" data-i18n-title="zoomFit"></button>
+            </div>
+            <div class="tb-group">
+              <button class="icon-btn toggle" data-cmd="toggleGrid" data-icon="grid" data-i18n-title="grid"></button>
+              <button class="icon-btn toggle" data-cmd="toggleSnap" data-icon="magnet" data-i18n-title="snap"></button>
+              <button class="icon-btn toggle" data-cmd="toggleRulers" data-icon="ruler" data-i18n-title="rulers"></button>
+            </div>
+            <div class="tb-group">
+              <button class="icon-btn" data-cmd="alignLeft" data-icon="alignLeft" data-i18n-title="alignLeft"></button>
+              <button class="icon-btn" data-cmd="alignCenterH" data-icon="alignCenterH" data-i18n-title="alignCenterH"></button>
+              <button class="icon-btn" data-cmd="alignRight" data-icon="alignRight" data-i18n-title="alignRight"></button>
+              <button class="icon-btn" data-cmd="alignTop" data-icon="alignTop" data-i18n-title="alignTop"></button>
+              <button class="icon-btn" data-cmd="alignMiddle" data-icon="alignMiddle" data-i18n-title="alignMiddle"></button>
+              <button class="icon-btn" data-cmd="alignBottom" data-icon="alignBottom" data-i18n-title="alignBottom"></button>
+              <button class="icon-btn" data-cmd="distributeH" data-icon="distributeH" data-i18n-title="distributeH"></button>
+              <button class="icon-btn" data-cmd="distributeV" data-icon="distributeV" data-i18n-title="distributeV"></button>
+            </div>
+            <div class="tb-group">
+              <button class="icon-btn" data-cmd="duplicate" data-icon="copy" data-i18n-title="duplicate"></button>
+              <button class="icon-btn danger" data-cmd="delete" data-icon="trash" data-i18n-title="delete"></button>
+            </div>
+            <div class="tb-group tb-grow">
+              <label class="tb-label" data-i18n="previewWith">معاينة ببيانات</label>
+              <select id="ed-order-select" class="tb-select"></select>
+              <button class="icon-btn toggle" data-cmd="togglePlaceholders" data-icon="braces" data-i18n-title="showPlaceholders"></button>
+            </div>
+          </div>
+
+          <div class="ed-stage" id="ed-stage">
+            <canvas class="ruler ruler-h" id="ruler-h"></canvas>
+            <canvas class="ruler ruler-v" id="ruler-v"></canvas>
+            <div class="ruler-corner" id="ruler-corner">mm</div>
+            <div class="ed-scroll" id="ed-scroll">
+              <div class="ed-workspace" id="ed-workspace">
+                <div class="ed-page-wrap" id="ed-page-wrap">
+                  <div class="doc-page" id="ed-page"></div>
+                  <div class="ed-overlay" id="ed-overlay"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="ed-bottombar">
+            <div class="page-tabs" id="page-tabs"></div>
+            <div class="ed-status" id="ed-status"></div>
+          </div>
+        </div>
+
+        <aside class="ed-right panel" id="ed-right">
+          <div id="props" class="props"></div>
+        </aside>
+        <button class="drawer-toggle drawer-left" id="toggle-left" data-icon="layers" data-i18n-title="elements"></button>
+        <button class="drawer-toggle drawer-right" id="toggle-right" data-icon="sliders" data-i18n-title="properties"></button>
+      </section>
+
+      <!-- ============ DATA ENTRY ============ -->
+      <section class="view" id="view-data">
+        <div class="data-form-wrap panel">
+          <div class="data-form-head">
+            <div class="row gap">
+              <button class="btn" id="de-prev" data-icon="chevronRight"></button>
+              <select id="de-order-select" class="grow"></select>
+              <button class="btn" id="de-next" data-icon="chevronLeft"></button>
+            </div>
+            <div class="row gap wrap">
+              <button class="btn primary" id="de-new" data-icon="plus"><span data-i18n="newOrder">طلب جديد</span></button>
+              <button class="btn" id="de-dup" data-icon="copy"><span data-i18n="duplicate">تكرار</span></button>
+              <button class="btn danger-outline" id="de-del" data-icon="trash"><span data-i18n="delete">حذف</span></button>
+            </div>
+          </div>
+          <form id="order-form" class="order-form" autocomplete="off"></form>
+        </div>
+        <div class="data-preview">
+          <div class="data-preview-bar">
+            <label class="tb-label" data-i18n="template">القالب</label>
+            <select id="de-template-select" class="tb-select"></select>
+            <div class="seg" id="de-kind">
+              <button data-kind="receipt" data-i18n="receipt">إيصال</button>
+              <button data-kind="sticker" data-i18n="sticker">ملصق</button>
+            </div>
+            <span class="grow"></span>
+            <button class="btn" id="de-open-designer" data-icon="edit"><span data-i18n="openInDesigner">فتح في المصمم</span></button>
+            <button class="btn primary" id="de-print" data-icon="printer"><span data-i18n="print">طباعة</span></button>
+          </div>
+          <div class="data-preview-stage" id="de-preview"></div>
+        </div>
+      </section>
+
+      <!-- ============ ORDERS ============ -->
+      <section class="view" id="view-orders">
+        <div class="page-pad">
+          <div class="view-head">
+            <h2 data-i18n="nav.orders">الطلبات</h2>
+            <div class="row gap wrap">
+              <button class="btn primary" id="or-new" data-icon="plus"><span data-i18n="newOrder">طلب جديد</span></button>
+              <button class="btn" id="or-print-receipts" data-icon="printer"><span data-i18n="printSelectedReceipts">طباعة الإيصالات المحددة</span></button>
+              <button class="btn" id="or-print-stickers" data-icon="tag"><span data-i18n="printSelectedStickers">طباعة الملصقات المحددة</span></button>
+              <button class="btn" id="or-print-all" data-icon="layers"><span data-i18n="printAllFiltered">طباعة كل الظاهر</span></button>
+            </div>
+          </div>
+          <div class="filters">
+            <div class="input-icon"><span data-icon="search"></span><input type="search" id="f-search" data-i18n-placeholder="searchOrders" placeholder="بحث"></div>
+            <input type="text" id="f-customer" data-i18n-placeholder="filterCustomer" placeholder="العميل">
+            <label class="f-label"><span data-i18n="from">من</span><input type="date" id="f-from"></label>
+            <label class="f-label"><span data-i18n="to">إلى</span><input type="date" id="f-to"></label>
+            <select id="f-status"></select>
+            <select id="f-payment"></select>
+            <button class="btn ghost" id="f-clear" data-i18n="clearFilters">مسح الفلاتر</button>
+          </div>
+          <div class="table-wrap">
+            <table class="table" id="orders-table">
+              <thead>
+                <tr>
+                  <th class="w-check"><input type="checkbox" id="or-check-all"></th>
+                  <th data-i18n="f.order_number">رقم الطلب</th>
+                  <th data-i18n="f.order_date">التاريخ</th>
+                  <th data-i18n="f.customer_name">العميل</th>
+                  <th data-i18n="f.customer_phone">الهاتف</th>
+                  <th data-i18n="f.city">المدينة</th>
+                  <th data-i18n="f.total">الإجمالي</th>
+                  <th data-i18n="f.status">الحالة</th>
+                  <th data-i18n="f.payment_status">الدفع</th>
+                  <th data-i18n="actions">إجراءات</th>
+                </tr>
+              </thead>
+              <tbody></tbody>
+            </table>
+            <div class="empty" id="orders-empty" hidden></div>
+          </div>
+          <div class="muted small" id="orders-summary"></div>
+        </div>
+      </section>
+
+      <!-- ============ TEMPLATES ============ -->
+      <section class="view" id="view-templates">
+        <div class="page-pad">
+          <div class="view-head">
+            <h2 data-i18n="nav.templates">القوالب</h2>
+            <div class="row gap wrap">
+              <button class="btn primary" id="tp-new-receipt" data-icon="plus"><span data-i18n="newReceiptTemplate">قالب إيصال جديد</span></button>
+              <button class="btn primary" id="tp-new-sticker" data-icon="plus"><span data-i18n="newStickerTemplate">قالب ملصق جديد</span></button>
+              <button class="btn" id="tp-import" data-icon="upload"><span data-i18n="importTemplates">استيراد</span></button>
+              <button class="btn" id="tp-export-all" data-icon="download"><span data-i18n="exportTemplates">تصدير الكل</span></button>
+              <button class="btn ghost" id="tp-restore" data-icon="refresh"><span data-i18n="restoreStarters">استعادة القوالب الجاهزة</span></button>
+            </div>
+          </div>
+          <div class="filters">
+            <div class="seg" id="tp-kind">
+              <button data-kind="all" data-i18n="all">الكل</button>
+              <button data-kind="receipt" data-i18n="receipts">الإيصالات</button>
+              <button data-kind="sticker" data-i18n="stickers">الملصقات</button>
+            </div>
+            <select id="tp-store"></select>
+          </div>
+          <div class="tpl-grid" id="tpl-grid"></div>
+        </div>
+      </section>
+
+      <!-- ============ PRINT ============ -->
+      <section class="view" id="view-print">
+        <aside class="print-settings panel" id="print-settings"></aside>
+        <div class="print-preview">
+          <div class="data-preview-bar">
+            <strong id="print-summary"></strong>
+            <span class="grow"></span>
+            <button class="btn primary" id="pr-print" data-icon="printer"><span data-i18n="printNow">طباعة الآن</span></button>
+          </div>
+          <div class="print-preview-stage" id="print-preview"></div>
+        </div>
+      </section>
+
+      <!-- ============ SETTINGS ============ -->
+      <section class="view" id="view-settings">
+        <div class="page-pad settings-grid" id="settings-root"></div>
+      </section>
+    </main>
+  </div>
+
+  <!-- Overlays -->
+  <div id="modal-root"></div>
+  <div id="toast-root" class="toasts" aria-live="polite"></div>
+  <div id="ctx-menu" class="ctx-menu" hidden></div>
+  <input type="file" id="file-input" hidden>
+
+  <!-- Print output (only visible when printing) -->
+  <div id="print-root"></div>
+
+  <!-- Libraries bundled locally (work offline) -->
+  <script src="js/vendor/JsBarcode.all.min.js"></script>
+  <script src="js/vendor/qrcode-generator.js"></script>
+  <!-- App -->
+  <script src="js/localization.js"></script>
+  <script src="js/storage.js"></script>
+  <script src="js/barcode.js"></script>
+  <script src="js/elements.js"></script>
+  <script src="js/templates.js"></script>
+  <script src="js/orders.js"></script>
+  <script src="js/designer.js"></script>
+  <script src="js/properties.js"></script>
+  <script src="js/printing.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

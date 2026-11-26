@@ -47,3 +47,31 @@
   .ed-status span:not(:last-child) { display: none; }
   .modal footer { flex-wrap: wrap; }
 }
+
+/* phones: orders become cards */
+@media (max-width: 760px) {
+  .table thead { display: none; }
+  .table, .table tbody { display: block; }
+  .table tr { display: grid; grid-template-columns: 28px minmax(0, 1fr) auto; grid-template-areas: "check no total" "check name name" "check phone city" "check date date" "check status pay" "act act act"; gap: 4px 10px; padding: 12px; border-bottom: 1px solid var(--border); align-items: center; }
+  .table tr:last-child { border-bottom: 0; }
+  .table td { display: block; padding: 0; border: 0 !important; background: none !important; min-width: 0; }
+  .table .c-check { grid-area: check; align-self: start; } .table .c-no { grid-area: no; } .table .c-total { grid-area: total; }
+  .table .c-name { grid-area: name; font-weight: 600; } .table .c-phone { grid-area: phone; } .table .c-city { grid-area: city; text-align: end; color: var(--muted); }
+  .table .c-date { grid-area: date; color: var(--muted); font-size: 12px; } .table .c-status { grid-area: status; } .table .c-pay { grid-area: pay; text-align: end; }
+  .table .c-act { grid-area: act; display: flex; justify-content: space-between; border-top: 1px dashed var(--border) !important; padding-top: 6px; }
+  .table .c-act .icon-btn { width: 40px; height: 40px; }
+  .view-head .row .btn { flex: 1 1 auto; }
+}
+
+/* touch screens: larger hit targets */
+@media (pointer: coarse) {
+  .handle { width: calc(18px * var(--iz, 1)); height: calc(18px * var(--iz, 1)); }
+  .h-rot { top: calc(-32px * var(--iz, 1)); }
+  .rot-stem { top: calc(-32px * var(--iz, 1)); height: calc(32px * var(--iz, 1)); }
+  .icon-btn { width: 38px; height: 38px; }
+  .icon-btn.xs { width: 32px; height: 32px; }
+  .layer { padding: 6px; }
+  .pal-btn { padding: 12px 4px; }
+  input[type=text], input[type=number], input[type=search], input[type=date], input[type=datetime-local], input[type=tel], input:not([type]), select { height: 40px; font-size: 16px; }
+  .pf input[type=number], .pf input[type=text], .pf select { height: 38px; font-size: 15px; }
+}

@@ -32,6 +32,10 @@
     tag: '<path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/>',
     droplet: '<path d="M12 2.69l5.66 5.66a8 8 0 1 1-11.31 0z"/>',
     bag: '<path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+    umbrella: '<path d="M23 12a11.05 11.05 0 0 0-22 0zm-5 7a3 3 0 0 1-6 0v-7"/>',
+    recycle: '<path d="M7 19H4.8a1.8 1.8 0 0 1-1.6-2.7L7.2 9.5"/><path d="M11 19h8.2a1.8 1.8 0 0 0 1.5-2.7l-1.2-2.1"/><path d="M14 16l-3 3 3 3"/><path d="M8.3 13.6L7.2 9.5 3.1 10.6"/><path d="M9.3 5.8l1.1-1.9A1.8 1.8 0 0 1 12 3a1.8 1.8 0 0 1 1.5.9l3.9 6.8"/><path d="M13.4 9.6l4.1 1.1 1.1-4.1"/>',
+    thisWayUp: '<path d="M8 18V4M4.5 7.5L8 4l3.5 3.5M16 18V4M12.5 7.5L16 4l3.5 3.5M3 21h18"/>',
+    handleCare: '<rect x="8" y="3" width="8" height="7"/><path d="M2 13l4 1 4 3h6a2 2 0 0 0 0-4h-4"/><path d="M22 13l-4 1"/><path d="M2 19l5 2h10l5-2"/>',
     hash: '<line x1="4" y1="9" x2="20" y2="9"/><line x1="4" y1="15" x2="20" y2="15"/><line x1="10" y1="3" x2="8" y2="21"/><line x1="16" y1="3" x2="14" y2="21"/>',
     fragile: '<path d="M8 2h8l-1 7a3 3 0 0 1-6 0z"/><line x1="12" y1="12" x2="12" y2="20"/><line x1="8" y1="20" x2="16" y2="20"/><path d="M11 2l1 3-1.5 2"/>',
     // UI icons
@@ -101,7 +105,7 @@
     clipboard: '<path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1"/>',
     template: '<rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/>',
   };
-  const DESIGN_ICONS = ['phone', 'pin', 'truck', 'package', 'user', 'calendar', 'cash', 'dollar', 'home', 'bag', 'file', 'alert', 'checkCircle', 'clock', 'mail', 'globe', 'card', 'arrowUp', 'scissors', 'refresh', 'star', 'heart', 'tag', 'droplet', 'fragile', 'hash'];
+  const DESIGN_ICONS = ['phone', 'pin', 'truck', 'package', 'user', 'calendar', 'cash', 'dollar', 'home', 'bag', 'file', 'alert', 'checkCircle', 'clock', 'mail', 'globe', 'card', 'arrowUp', 'scissors', 'refresh', 'star', 'heart', 'tag', 'droplet', 'fragile', 'hash', 'umbrella', 'recycle', 'thisWayUp', 'handleCare'];
 
   function icon(name, cls) {
     const body = ICONS[name] || ICONS.star;

@@ -46,7 +46,7 @@
     buildPalette() {
       const pal = $('palette');
       pal.innerHTML = PALETTE.map((tp) => `<button class="pal-btn" draggable="true" data-type="${tp}" title="${t('el.' + tp)}">${Elements.icon(Elements.TYPES[tp].icon)}<span>${t('el.' + tp)}</span></button>`).join('');
-      pal.onclick = (e) => { const b = e.target.closest('[data-type]'); if (b) this.addElement(b.dataset.type); };
+      pal.onclick = (e) => { const b = e.target.closest('[data-type]'); if (!b) return; this.addElement(b.dataset.type); if (window.innerWidth <= 1100) $('view-designer').classList.remove('show-left'); };
       pal.ondragstart = (e) => { const b = e.target.closest('[data-type]'); if (b) { e.dataTransfer.setData('text/x-dd-type', b.dataset.type); e.dataTransfer.effectAllowed = 'copy'; } };
     },
     bindToolbar() {
@@ -462,7 +462,23 @@
         e.preventDefault(); this.addElement(type, this.toMM(e));
       });
     },
+    /* touch: two fingers pinch-zoom, one finger on empty space pans, long press opens the menu */
+    touchDown(e) {
+      this.touches = this.touches || new Map();
+      this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.touches.size === 2) {
+        clearTimeout(this._lp);
+        if (this.drag && this.drag.kind === 'move' && this.drag.moved) this.change(() => {}, { immediate: true });
+        const [a, b] = Array.from(this.touches.values());
+        this.drag = { kind: 'pinch', d0: Math.hypot(a.x - b.x, a.y - b.y) || 1, z0: this.zoom };
+        try { $('ed-scroll').setPointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+        e.preventDefault();
+        return true;
+      }
+      return false;
+    },
     onDown(e) {
+      if (e.pointerType === 'touch' && this.touchDown(e)) return;
       if (e.button !== 0 || this.editingId) return;
       if (e.target.closest('.el-text[contenteditable="true"]')) return;
       const m = this.toMM(e);
@@ -485,23 +501,40 @@
         $('ed-scroll').setPointerCapture(e.pointerId);
         const movable = this.selected().filter((x) => !x.locked);
         this.drag = { kind: 'move', start: m, sx: e.clientX, sy: e.clientY, moved: false, origs: movable.map((x) => ({ id: x.id, x: x.x, y: x.y, w: x.w, h: x.h })) };
+        if (e.pointerType === 'touch') {
+          clearTimeout(this._lp);
+          const cx = e.clientX, cy = e.clientY;
+          this._lp = setTimeout(() => { if (this.drag && this.drag.kind === 'move' && !this.drag.moved) { this.drag = null; this.onContext({ preventDefault() {}, target: node, clientX: cx, clientY: cy }); } }, 550);
+        }
         return;
       }
       if (e.target.closest('.ed-workspace')) {
         e.preventDefault();
         if (!(e.shiftKey || e.ctrlKey || e.metaKey)) { if (this.selection.length) { this.selection = []; this.afterSelect(); } }
         $('ed-scroll').setPointerCapture(e.pointerId);
+        if (e.pointerType === 'touch') { const sc = $('ed-scroll'); this.drag = { kind: 'pan', sx: e.clientX, sy: e.clientY, sl: sc.scrollLeft, st: sc.scrollTop }; return; }
         this.drag = { kind: 'marquee', start: m, base: this.selection.slice(), rect: null };
       }
     },
     onMove(e) {
+      if (e.pointerType === 'touch' && this.touches && this.touches.has(e.pointerId)) this.touches.set(e.pointerId, { x: e.clientX, y: e.clientY });
+      if (this.drag && this.drag.kind === 'pinch') {
+        if (this.touches.size < 2) return;
+        const [a, b] = Array.from(this.touches.values());
+        this.setZoom(this.drag.z0 * Math.hypot(a.x - b.x, a.y - b.y) / this.drag.d0, { x: (a.x + b.x) / 2, y: (a.y + b.y) / 2 });
+        return;
+      }
+      if (this.drag && this.drag.kind === 'pan') {
+        const sc = $('ed-scroll'); sc.scrollLeft = this.drag.sl - (e.clientX - this.drag.sx); sc.scrollTop = this.drag.st - (e.clientY - this.drag.sy);
+        return;
+      }
       const m = this.toMM(e);
       this.cursor = m;
       const d = this.drag;
       if (!d) { this.drawRulers(); this.updateStatus(); return; }
       if (d.kind === 'move') {
-        if (!d.moved && Math.hypot(e.clientX - d.sx, e.clientY - d.sy) < 3) return;
-        d.moved = true;
+        if (!d.moved && Math.hypot(e.clientX - d.sx, e.clientY - d.sy) < (e.pointerType === 'touch' ? 6 : 3)) return;
+        d.moved = true; clearTimeout(this._lp);
         if (!d.origs.length) return;
         let dx = m.x - d.start.x, dy = m.y - d.start.y;
         if (e.shiftKey) { if (Math.abs(dx) > Math.abs(dy)) dy = 0; else dx = 0; }
@@ -544,6 +577,10 @@
       tpl.updatedAt = Date.now();
     },
     onUp(e) {
+      clearTimeout(this._lp);
+      if (this.touches) this.touches.delete(e.pointerId);
+      if (this.drag && this.drag.kind === 'pinch') { if (!this.touches || this.touches.size === 0) this.drag = null; return; }
+      if (this.drag && this.drag.kind === 'pan') { this.drag = null; return; }
       const d = this.drag; if (!d) return;
       this.drag = null; this.guides = []; this._liveCtx = null;
       try { $('ed-scroll').releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }

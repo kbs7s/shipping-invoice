@@ -465,6 +465,11 @@
         this.state = { templates, orders, stores };
         if (!Settings.get('seeded') && !templates.length && !orders.length) await this.seed();
         if (!this.state.templates.length) { const st = Templates.starters(); this.state.templates = st; await DB.putMany('templates', st); }
+        // add starter templates released after this browser was first set up
+        const known = Settings.get('installedStarters') || (Settings.get('seeded') ? Templates.ORIGINAL_STARTERS : []);
+        const missing = Templates.STARTER_ORDER.filter((k) => !known.includes(k) && !this.state.templates.some((x) => x.starter === k));
+        if (missing.length) { const add = missing.map((k) => Templates.STARTERS[k]()); this.state.templates.push(...add); await DB.putMany('templates', add); }
+        Settings.set('installedStarters', Templates.STARTER_ORDER.slice());
       } catch (e) {
         console.error(e);
         this.state = { templates: Templates.starters(), orders: [], stores: [] };

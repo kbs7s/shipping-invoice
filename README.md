@@ -31,7 +31,8 @@ Arabic (RTL) is the default interface language and English (LTR) is one click aw
 - Data-entry tab with a live preview; switch receipt/sticker templates without losing order data; preview any order in the designer (or show field names with the `{ }` button).
 
 **Templates**
-- Seven editable starter templates: minimal modern receipt (A5), professional delivery receipt (A4), e-commerce receipt (A5), compact 80 mm thermal receipt, 100×150 shipping label, 100×100 COD sticker, minimal black-and-white receipt (A6).
+- Twelve editable starter templates: minimal modern receipt (A5), professional delivery receipt (A4), e-commerce receipt (A5), compact 80 mm thermal receipt, 100×150 shipping label, 100×100 COD sticker, minimal black-and-white receipt (A6), FRAGILE label with From/To and barcode (100×100), handling-marks label with a black FRAGILE box, Ref/Lot cells and two barcodes (100×110), priority-mail 4×6 label with QR and tracking number (100×150), carrier 4×6 label with postage box, service banner and tracking barcode (100×150), and a return/exchange receipt (A6).
+- New starters are added automatically to browsers that already use the app; your own templates are not touched.
 - Create, edit, duplicate, rename, delete, set default (per receipt/sticker), export one or all as JSON, import JSON, filter by type and store, restore starters.
 - Sticker sizes 50×30, 60×40, 70×50, 100×100, 100×150 or custom, with an optional automatic starter layout.
 
@@ -50,6 +51,12 @@ Arabic (RTL) is the default interface language and English (LTR) is one click aw
 
 **Interface**
 - Arabic RTL by default and English LTR, light and dark modes, responsive layout (side panels become drawers on tablets and phones), toasts, confirmation dialogs, empty states and loading indicators.
+
+### Phones and tablets
+
+- Side panels open as drawers; the element palette closes after you add an element.
+- One finger on empty canvas pans, two fingers pinch to zoom, and a long press on an element opens its menu.
+- Larger resize/rotate handles and inputs on touch screens; the orders list turns into cards on phones.
 
 ### Keyboard shortcuts
 

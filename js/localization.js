@@ -74,7 +74,7 @@
     noTemplates: 'لا توجد قوالب', newTemplateName: 'قالب جديد', chooseStickerSize: 'اختر حجم الملصق', chooseReceiptSize: 'اختر حجم الإيصال', customSize: 'حجم مخصص',
     templateCreated: 'تم إنشاء القالب', templateDeleted: 'تم حذف القالب', templateDuplicated: 'تم تكرار القالب', templatesImported: 'تم استيراد {n} قالب', templateDefaultSet: 'تم التعيين كافتراضي',
     confirmDeleteTemplate: 'حذف القالب "{n}"؟', cannotDeleteLast: 'لا يمكن حذف آخر قالب', copySuffix: ' (نسخة)', startersRestored: 'تمت إضافة القوالب الجاهزة',
-    confirmRestore: 'إضافة نسخ جديدة من القوالب الجاهزة السبعة؟ لن تُحذف قوالبك الحالية.', withBasicLayout: 'مع تخطيط أساسي جاهز',
+    confirmRestore: 'إضافة نسخ جديدة من كل القوالب الجاهزة؟ لن تُحذف قوالبك الحالية.', withBasicLayout: 'مع تخطيط أساسي جاهز',
     // print
     printNow: 'طباعة الآن', printSource: 'المستندات', srcCurrent: 'الطلب الحالي', srcSelected: 'الطلبات المحددة', srcAll: 'كل الطلبات', srcBlank: 'القالب فقط (بدون بيانات)',
     copies: 'عدد النسخ', paper: 'الورق', paperDoc: 'بحجم المستند (طابعة ملصقات)', roll80: 'ورق حراري 80 مم', roll58: 'ورق حراري 58 مم', custom: 'مخصص',
@@ -163,7 +163,7 @@
     noTemplates: 'No templates', newTemplateName: 'New template', chooseStickerSize: 'Choose sticker size', chooseReceiptSize: 'Choose receipt size', customSize: 'Custom size',
     templateCreated: 'Template created', templateDeleted: 'Template deleted', templateDuplicated: 'Template duplicated', templatesImported: '{n} template(s) imported', templateDefaultSet: 'Set as default',
     confirmDeleteTemplate: 'Delete template "{n}"?', cannotDeleteLast: 'Cannot delete the last template', copySuffix: ' (copy)', startersRestored: 'Starter templates added',
-    confirmRestore: 'Add fresh copies of the seven starter templates? Your templates will not be removed.', withBasicLayout: 'With a basic ready layout',
+    confirmRestore: 'Add fresh copies of all starter templates? Your templates will not be removed.', withBasicLayout: 'With a basic ready layout',
     printNow: 'Print now', printSource: 'Documents', srcCurrent: 'Current order', srcSelected: 'Selected orders', srcAll: 'All orders', srcBlank: 'Template only (no data)',
     copies: 'Copies', paper: 'Paper', paperDoc: 'Same as document (label printer)', roll80: '80 mm thermal roll', roll58: '58 mm thermal roll', custom: 'Custom',
     portrait: 'Portrait', landscape: 'Landscape', margins: 'Margins (mm)', top: 'Top', bottom: 'Bottom', left: 'Left', right: 'Right', gap: 'Gap between documents (mm)',

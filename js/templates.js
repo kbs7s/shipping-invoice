@@ -260,8 +260,133 @@
         txt(X, 140, W, 4.5, '{{footer_text}}', { fontSize: 6.5, align: 'center' }, 'التذييل'),
       ], { starter: 'bw' });
     },
+
+    fragile() {
+      const B = { fontFamily: 'Cairo' };
+      return tplBase('ملصق قابل للكسر 100×100', 'sticker', 100, 100, [
+        rect(2, 2, 96, 96, { borderWidth: 0.5, radius: 3 }),
+        img(35, 4, 30, 11),
+        line(4, 17, 92, { thickness: 0.4 }),
+        mk('line', 49, 17, 2, 20.5, { orientation: 'v', thickness: 0.4 }, { color: '#111111' }, 'خط عمودي'),
+        txt(52, 18, 42, 4.5, 'إلى / TO', { fontSize: 7.5, bold: true }),
+        txt(52, 22.5, 42, 14.5, '{{customer_name}}\n{{customer_phone}}\n{{city_district}}', { fontSize: 7.5, valign: 'top' }, 'المستلم'),
+        txt(6, 18, 42, 4.5, 'من / FROM', { fontSize: 7.5, bold: true }),
+        txt(6, 22.5, 42, 14.5, '{{sender_name}}\n{{sender_phone}}\n{{store_address}}', { fontSize: 7, valign: 'top' }, 'المرسل'),
+        line(4, 37.5, 92, { thickness: 0.4 }),
+        txt(4, 38.5, 92, 9.5, '{{delivery_company}}', Object.assign({ fontSize: 15, bold: true, align: 'center' }, B), 'شركة التوصيل'),
+        line(4, 48.5, 92, { thickness: 0.4 }),
+        txt(68, 50, 26, 5, 'قابل للكسر  FRAGILE', { fontSize: 7, bold: true }),
+        rect(70, 56, 22, 22, { borderWidth: 0.5 }),
+        ico(73, 59, 16, 'fragile'),
+        txt(6, 50, 60, 5, '{{order_number}}', { fontSize: 8.5, bold: true, align: 'center', dir: 'ltr', letterSpacing: 1.5, fontFamily: 'Arial' }, 'رقم التتبع'),
+        bc(6, 56, 60, 22, { showText: false }),
+        line(4, 81, 92, { thickness: 0.4 }),
+        fld(52, 82.5, 42, 13, 'package_number', 'رقم الطرد / Item №', { fontSize: 10, bold: true }, { layout: 'stacked', labelBold: false }),
+        txt(6, 82.5, 44, 13, 'تعليمات التوصيل:\n{{special_instructions}}', { fontSize: 7.5, valign: 'top' }, 'التعليمات'),
+      ], { starter: 'fragile' });
+    },
+
+    handling() {
+      return tplBase('ملصق شحن مع علامة التعامل 100×110', 'sticker', 100, 110, [
+        rect(2, 2, 96, 106, { borderWidth: 0.5, radius: 2.5 }),
+        img(68, 5, 26, 13),
+        mk('line', 63, 4, 2, 17, { orientation: 'v', thickness: 0.4 }, { color: '#111111' }, 'خط عمودي'),
+        txt(6, 4.5, 56, 4.5, 'من / FROM', { fontSize: 7.5, bold: true }),
+        txt(6, 9, 56, 12, '{{store_name}}\n{{store_address}}', { fontSize: 8, valign: 'top' }, 'المرسل'),
+        line(4, 22, 92, { thickness: 0.4 }),
+        rect(70, 24.5, 24, 24, { bg: '#000000', borderWidth: 0 }),
+        ico(76, 26.5, 12, 'fragile', '#ffffff'),
+        txt(70, 40.5, 24, 6, 'قابل للكسر', { fontSize: 8, bold: true, color: '#ffffff', align: 'center' }),
+        txt(6, 24, 62, 4.5, 'إلى / TO', { fontSize: 8, bold: true }),
+        txt(6, 28.5, 62, 8.5, '{{customer_name}}', { fontSize: 15, bold: true }),
+        txt(6, 37, 62, 12, '{{customer_address}}\n{{city_district}}', { fontSize: 9, valign: 'top' }, 'العنوان'),
+        line(4, 50, 92, { thickness: 0.4 }),
+        fld(66, 52, 28, 13, 'order_number', 'رقم الطلب', { fontSize: 10.5, bold: true }, { layout: 'stacked', labelBold: false }),
+        bc(6, 52, 58, 13, { showText: false }),
+        line(4, 67, 92, { thickness: 0.4 }),
+        txt(51, 68, 43, 6, 'الوزن: {{weight}}', { fontSize: 8, bold: true }, 'الوزن'),
+        mk('line', 49, 67, 2, 8, { orientation: 'v', thickness: 0.4 }, { color: '#111111' }, 'خط عمودي'),
+        txt(6, 68, 43, 6, 'الطرد: {{package_number}} / {{packages_count}}', { fontSize: 8, bold: true }, 'رقم الطرد'),
+        line(4, 75, 92, { thickness: 0.4 }),
+        fld(62, 77, 32, 11, 'receipt_number', 'رقم الإيصال', { fontSize: 10.5, bold: true }, { layout: 'stacked', labelBold: false }),
+        line(62, 89.5, 32, { thickness: 0.3 }),
+        txt(62, 91, 32, 15, 'تعليمات التوصيل:\n{{special_instructions}}', { fontSize: 7.5, valign: 'top' }, 'التعليمات'),
+        bc(6, 77, 52, 28, { value: '{{receipt_number}}', showText: false }),
+      ], { starter: 'handling' });
+    },
+
+    priority() {
+      return tplBase('ملصق بريد سريع 100×150', 'sticker', 100, 150, [
+        rect(2, 2, 96, 146, { borderWidth: 0.6 }),
+        rect(2, 2, 24, 26, { borderWidth: 0.6 }),
+        txt(2, 2, 24, 26, 'P', { fontSize: 46, bold: true, align: 'center', dir: 'ltr', fontFamily: 'Arial' }, 'رمز الخدمة'),
+        txt(28, 20, 44, 6, 'الوزن: {{weight}}', { fontSize: 8.5 }, 'الوزن'),
+        qr(74, 4, 22),
+        line(2, 28, 96, { thickness: 0.6 }),
+        txt(2, 28.5, 96, 11, '{{delivery_company}}', { fontSize: 17, bold: true, align: 'center' }, 'شركة التوصيل'),
+        line(2, 40, 96, { thickness: 0.6 }),
+        txt(8, 43, 86, 16, '{{sender_name}}\n{{store_address}}\n{{sender_phone}}', { fontSize: 8.5, valign: 'top' }, 'المرسل'),
+        txt(72, 64, 22, 6, 'شحن إلى:', { fontSize: 11, bold: true }),
+        txt(8, 64, 63, 28, '{{customer_name}}\n{{customer_address}}\n{{city_district}}\n{{customer_phone}}', { fontSize: 11, valign: 'top', lineHeight: 1.35 }, 'المستلم'),
+        line(2, 96, 96, { thickness: 1.2 }),
+        bc(8, 99, 84, 24, { showText: false }),
+        txt(4, 124, 92, 7, '{{order_number}}', { fontSize: 13, bold: true, align: 'center', dir: 'ltr', letterSpacing: 1, fontFamily: 'Arial' }, 'رقم التتبع'),
+        line(2, 133, 96, { thickness: 0.6 }),
+        txt(4, 135, 92, 10, 'رقم التتبع: {{receipt_number}}', { fontSize: 11, align: 'center' }, 'التتبع'),
+      ], { starter: 'priority' });
+    },
+
+    carrier() {
+      return tplBase('ملصق شركة نقل 100×150', 'sticker', 100, 150, [
+        rect(2, 2, 96, 146, { borderWidth: 0.5 }),
+        rect(2, 2, 30, 30, { borderWidth: 0.5 }),
+        txt(2, 2, 30, 30, 'F', { fontSize: 62, bold: true, align: 'center', dir: 'ltr', fontFamily: 'Arial' }, 'رمز الخدمة'),
+        txt(34, 3.5, 38, 22, 'الأجور مدفوعة\n{{delivery_company}}\n{{order_date}}\nالوزن: {{weight}}', { fontSize: 7.5, valign: 'top', lineHeight: 1.25 }, 'معلومات الشحن'),
+        line(32, 26.5, 42, { thickness: 0.3 }),
+        txt(34, 27, 38, 5, '{{payment_status}}', { fontSize: 6.5 }, 'حالة الدفع'),
+        qr(74, 4, 22),
+        txt(73, 26.5, 24, 5, '{{receipt_number}}', { fontSize: 6, align: 'center', dir: 'ltr', fontFamily: 'Arial' }),
+        line(2, 32, 96, { thickness: 0.5 }),
+        txt(2, 32.5, 96, 10, '{{delivery_company}} — شحن سريع', { fontSize: 14, bold: true, align: 'center' }, 'الخدمة'),
+        line(2, 43, 96, { thickness: 1 }),
+        txt(6, 45, 88, 14, '{{store_name}}\n{{store_address}}\n{{store_phone}}', { fontSize: 8, valign: 'top', fontFamily: 'Courier New' }, 'المستودع'),
+        txt(6, 60, 88, 5, 'طلب: {{order_number}}', { fontSize: 8, align: 'left' }, 'رقم الطلب'),
+        txt(20, 67, 74, 6.5, '{{customer_name}}', { fontSize: 11.5, bold: true }),
+        txt(20, 73.5, 74, 23, '{{customer_address}}\n{{city_district}}\n{{customer_phone}}', { fontSize: 10, valign: 'top' }, 'عنوان المستلم'),
+        line(2, 99, 96, { thickness: 1 }),
+        txt(4, 100, 92, 7, 'رقم التتبع #', { fontSize: 12, bold: true, align: 'center' }),
+        bc(8, 108, 84, 24, { value: '{{receipt_number}}', showText: false }),
+        txt(4, 132, 92, 6, '{{receipt_number}}', { fontSize: 11, bold: true, align: 'center', dir: 'ltr', letterSpacing: 1, fontFamily: 'Arial' }, 'رقم التتبع'),
+        line(2, 139.5, 96, { thickness: 1 }),
+      ], { starter: 'carrier' });
+    },
+
+    returns() {
+      const X = 7, W = 91;
+      return tplBase('إيصال إرجاع واستبدال', 'receipt', 105, 148, [
+        txt(X, 6, W, 8, '{{store_name}}', { fontSize: 13, bold: true, align: 'center' }),
+        txt(X, 14, W, 5, '{{store_phone}}', { fontSize: 8, align: 'center' }),
+        txt(X, 21, W, 9, 'إيصال إرجاع / استبدال', { fontSize: 12, bold: true, color: '#ffffff', bg: '#000000', align: 'center', radius: 1 }),
+        fld(X, 33, W, 5.5, 'order_number', 'رقم الطلب', { fontSize: 9 }),
+        fld(X, 38.5, W, 5.5, 'order_date', 'تاريخ الطلب', { fontSize: 9 }),
+        fld(X, 44, W, 5.5, 'customer_name', 'العميل', { fontSize: 9 }),
+        fld(X, 49.5, W, 5.5, 'customer_phone', 'الهاتف', { fontSize: 9 }),
+        txt(X, 56, W, 6, 'نوع العملية:   ☐ إرجاع     ☐ استبدال', { fontSize: 9, bold: true }, 'نوع العملية'),
+        tbl(X, 63, W, 26, { columns: cols([['name', 'المنتج', 55, 'start'], ['qty', 'الكمية', 15], ['total', 'المبلغ', 30]]), headerBg: '#f3f4f6', lineColor: '#9ca3af', cellPadding: 0.8 }, { fontSize: 8 }),
+        txt(X, 91, W, 5, 'سبب الإرجاع:', { fontSize: 9, bold: true }),
+        line(X, 101, W, { lineStyle: 'dotted', thickness: 0.3 }),
+        line(X, 107, W, { lineStyle: 'dotted', thickness: 0.3 }),
+        money(X, 110, W, 6, 'total', 'قيمة الطلب', { fontSize: 10, bold: true }, { labelBold: true }),
+        txt(X, 118, W, 10, '{{return_policy}}', { fontSize: 6.5, color: GRAY, valign: 'top' }, 'سياسة الإرجاع'),
+        txt(60, 130, 38, 5, 'توقيع العميل', { fontSize: 8, align: 'center' }),
+        line(62, 141, 34, { thickness: 0.3 }),
+        txt(X, 130, 38, 5, 'توقيع الموظف', { fontSize: 8, align: 'center' }),
+        line(9, 141, 34, { thickness: 0.3 }),
+      ], { starter: 'returns' });
+    },
   };
-  const STARTER_ORDER = ['minimal', 'professional', 'ecommerce', 'thermal', 'shipping', 'cod', 'bw'];
+  const STARTER_ORDER = ['minimal', 'professional', 'ecommerce', 'thermal', 'shipping', 'cod', 'bw', 'fragile', 'handling', 'priority', 'carrier', 'returns'];
+  const ORIGINAL_STARTERS = ['minimal', 'professional', 'ecommerce', 'thermal', 'shipping', 'cod', 'bw'];
 
   /** Proportional auto-layout for any sticker size. */
   function basicSticker(w, h) {
@@ -284,7 +409,7 @@
 
   /* ------------------------------------------------------ manager UI */
   const Templates = {
-    SIZES, STARTERS, STARTER_ORDER, basicSticker,
+    SIZES, STARTERS, STARTER_ORDER, ORIGINAL_STARTERS, basicSticker,
     filter: { kind: 'all', store: '' },
 
     starters() { return STARTER_ORDER.map((k) => STARTERS[k]()); },

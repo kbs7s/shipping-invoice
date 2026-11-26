@@ -325,16 +325,16 @@
       tb.innerHTML = list.map((o) => {
         const d = buildData(o, App.storeFor(null, o));
         return `<tr data-id="${o.id}" class="${sel.has(o.id) ? 'selected' : ''}">
-          <td class="w-check"><input type="checkbox" data-act="check" ${sel.has(o.id) ? 'checked' : ''}></td>
-          <td><a href="#" data-act="edit" class="strong">${E_.esc(o.order_number)}</a></td>
-          <td class="nowrap">${E_.esc(d.order_date)}</td>
-          <td>${E_.esc(o.customer_name)}</td>
-          <td class="nowrap ltr-num">${E_.esc(o.customer_phone)}</td>
-          <td>${E_.esc(d.city_district)}</td>
-          <td class="nowrap strong">${d.total} ${E_.esc(d.currency)}</td>
-          <td>${statusSel(o)}</td>
-          <td><span class="badge ps-${o.payment_status}">${t('ps.' + o.payment_status)}</span></td>
-          <td class="nowrap row-actions">
+          <td class="w-check c-check"><input type="checkbox" data-act="check" ${sel.has(o.id) ? 'checked' : ''}></td>
+          <td class="c-no"><a href="#" data-act="edit" class="strong">${E_.esc(o.order_number)}</a></td>
+          <td class="nowrap c-date">${E_.esc(d.order_date)}</td>
+          <td class="c-name">${E_.esc(o.customer_name)}</td>
+          <td class="nowrap ltr-num c-phone">${E_.esc(o.customer_phone)}</td>
+          <td class="c-city">${E_.esc(d.city_district)}</td>
+          <td class="nowrap strong c-total">${d.total} ${E_.esc(d.currency)}</td>
+          <td class="c-status">${statusSel(o)}</td>
+          <td class="c-pay"><span class="badge ps-${o.payment_status}">${t('ps.' + o.payment_status)}</span></td>
+          <td class="nowrap row-actions c-act">
             <button class="icon-btn" data-act="edit" title="${t('edit')}">${E_.icon('edit')}</button>
             <button class="icon-btn" data-act="dup" title="${t('duplicate')}">${E_.icon('copy')}</button>
             <button class="icon-btn" data-act="print-r" title="${t('printReceipt')}">${E_.icon('printer')}</button>

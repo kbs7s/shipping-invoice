@@ -80,7 +80,14 @@ Data is stored **only in the browser you use, on that device**. It is not an onl
 
 ## Offline use
 
-All libraries and fonts are bundled locally, so after the page has loaded once the app needs no internet connection:
+The app is an installable web app (PWA). On the first visit a service worker (`sw.js`) saves every app file on the device, so from then on it opens and works with **no internet connection**, and your orders and templates keep saving to the device as usual.
+
+- **Install it:** Settings → *Offline use* → *Install app on this device* (Chrome/Edge on Android, Windows, Mac), or the browser menu's *Install* / *Add to Home screen*. On iPhone/iPad: Share → *Add to Home Screen*. It then opens like a normal app in its own window.
+- The app asks the browser for **persistent storage**, so data is not cleared automatically when the device runs low on space (installed apps get this most reliably). The Settings page shows the status.
+- If you have orders and no backup in the last 7 days, the app reminds you to export one.
+- When you are online, updates download in the background and a *Reload* button appears. When you change the app's files yourself, bump `VERSION` in `sw.js`.
+
+All libraries and fonts are bundled locally:
 
 | Library | Purpose | File |
 |---|---|---|

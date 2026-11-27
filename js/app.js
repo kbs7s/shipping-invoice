@@ -101,14 +101,16 @@
       s.textContent = on ? t('saving') : t('saved');
       s.classList.toggle('busy', on);
     },
-    toast(msg, type) {
+    toast(msg, type, opts) {
+      opts = opts || {};
       const n = document.createElement('div');
       n.className = 'toast ' + (type || 'info');
       const ic = { success: 'checkCircle', warn: 'alert', error: 'alert', info: 'checkCircle' }[type || 'info'];
-      n.innerHTML = Elements.icon(ic) + `<span>${esc(msg)}</span>`;
+      n.innerHTML = Elements.icon(ic) + `<span>${esc(msg)}</span>` + (opts.action ? `<button class="btn small toast-action">${esc(opts.action)}</button>` : '');
+      if (opts.action) n.querySelector('.toast-action').onclick = () => opts.onAction && opts.onAction();
       $('toast-root').appendChild(n);
       requestAnimationFrame(() => n.classList.add('show'));
-      setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, type === 'error' || type === 'warn' ? 4200 : 2400);
+      setTimeout(() => { n.classList.remove('show'); setTimeout(() => n.remove(), 300); }, opts.ms || (opts.action ? 15000 : type === 'error' || type === 'warn' ? 4200 : 2400));
     },
     loading(on, text) {
       let el = $('loading-overlay');
@@ -275,6 +277,14 @@
           <div class="row between"><h3>${E.icon('home')} ${t('stores')}</h3><button class="btn small primary" data-sact="add">${E.icon('plus')}<span>${t('addStore')}</span></button></div>
           <div class="stores">${stores || `<p class="muted">—</p>`}</div>
         </section>
+        <section class="card" id="offline-card">
+          <h3>${E.icon('download')} ${t('offlineTitle')}</h3>
+          <p class="note" id="offline-status"></p>
+          <p class="muted small" id="persist-status"></p>
+          <p class="muted small">${t('lastBackup', { d: S.lastBackup ? new Date(S.lastBackup).toLocaleString(I18N.lang === 'ar' ? 'ar-IQ' : 'en-GB') : t('never') })}</p>
+          <div class="row gap wrap"><button class="btn primary" id="install-btn" hidden>${E.icon('download')}<span>${t('installApp')}</span></button></div>
+          <p class="muted small" id="install-hint" hidden>${t('installHint')}</p>
+        </section>
         <section class="card">
           <h3>${E.icon('save')} ${t('dataManagement')}</h3>
           <p class="note">${t('storageNote')}</p>
@@ -297,11 +307,53 @@
       root.querySelector('[data-set="lang"]').value = I18N.lang;
       root.querySelector('[data-set="theme"]').value = S.theme;
       root.querySelector('[data-set="decimals"]').value = String(S.decimals);
+      this.renderOffline();
       DB.estimate().then((est) => {
         const n = $('storage-usage'); if (!n || !est) return;
         const f = (b) => (b > 1048576 ? (b / 1048576).toFixed(1) + ' MB' : Math.round(b / 1024) + ' KB');
         n.textContent = t('storageUsage', { used: f(est.usage || 0), quota: f(est.quota || 0) }) + (DB.isPersistent() ? '' : ' — IndexedDB unavailable (memory only)');
       });
+    },
+    // ---- offline / install -------------------------------------------------
+    initOffline() {
+      this.offline = { ready: false, supported: 'serviceWorker' in navigator && /^https?:$/.test(location.protocol), persisted: false, prompt: null };
+      if (this.offline.supported) {
+        navigator.serviceWorker.register('sw.js').then((reg) => {
+          const done = () => { this.offline.ready = true; this.renderOffline(); };
+          if (reg.active) done();
+          navigator.serviceWorker.ready.then(done);
+          reg.addEventListener('updatefound', () => {
+            const nw = reg.installing; if (!nw) return;
+            nw.addEventListener('statechange', () => {
+              if (nw.state === 'activated' && this._hadController) this.toast(t('updateReady'), 'info', { action: t('reload'), onAction: () => location.reload() });
+            });
+          });
+          this._hadController = !!navigator.serviceWorker.controller;
+        }).catch((e) => { console.warn('SW', e); this.offline.supported = false; this.renderOffline(); });
+      }
+      if (navigator.storage && navigator.storage.persisted) {
+        navigator.storage.persisted().then((p) => (p || !navigator.storage.persist ? p : navigator.storage.persist())).then((p) => { this.offline.persisted = !!p; this.renderOffline(); }).catch(() => {});
+      }
+      window.addEventListener('beforeinstallprompt', (e) => { e.preventDefault(); this.offline.prompt = e; this.renderOffline(); });
+      window.addEventListener('appinstalled', () => { this.offline.prompt = null; this.toast(t('installed'), 'success'); this.renderOffline(); });
+      window.addEventListener('offline', () => this.toast(t('offlineNow'), 'info'));
+      window.addEventListener('online', () => this.toast(t('onlineNow'), 'success'));
+      // gentle reminder to keep a backup file, since data lives only on this device
+      const last = Settings.get('lastBackup');
+      if (this.state.orders.length && (!last || Date.now() - last > 7 * 864e5) && Date.now() - (Settings.get('backupNagAt') || 0) > 864e5) {
+        Settings.set('backupNagAt', Date.now());
+        setTimeout(() => this.toast(t('backupReminder'), 'warn', { ms: 7000 }), 1500);
+      }
+    },
+    renderOffline() {
+      const o = this.offline; const st = $('offline-status'); if (!o || !st) return;
+      st.textContent = !o.supported ? t('offlineUnsupported') : o.ready ? t('offlineReady') : t('offlinePreparing');
+      st.classList.toggle('ok', o.supported && o.ready);
+      $('persist-status').textContent = o.persisted ? t('persistYes') : t('persistNo');
+      const standalone = matchMedia('(display-mode: standalone)').matches || navigator.standalone;
+      const btn = $('install-btn'); btn.hidden = !o.prompt || standalone;
+      btn.onclick = async () => { const p = o.prompt; if (!p) return; o.prompt = null; p.prompt(); try { await p.userChoice; } catch (e) { /* ignore */ } this.renderOffline(); };
+      $('install-hint').hidden = standalone || !/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent) || !('ontouchend' in document);
     },
     initSettings() {
       const root = $('settings-root');
@@ -329,7 +381,7 @@
         if (sa === 'del' && s) { if (await this.confirm(t('confirmDeleteStore', { n: s.name }), { danger: true, okText: t('delete') })) { this.state.stores = this.state.stores.filter((x) => x !== s); await DB.delete('stores', s.id); this.renderSettings(); } }
         if (sa === 'logo' && s) { const src = await this.pickImage(); if (src) { s.logo = src; await DB.put('stores', s); this.renderSettings(); Designer.dirty = true; } }
         if (sa === 'nologo' && s) { s.logo = ''; await DB.put('stores', s); this.renderSettings(); Designer.dirty = true; }
-        if (da === 'export') { this.download(`delivery-designer-backup-${new Date().toISOString().slice(0, 10)}.json`, this.backupObject()); this.toast(t('exported'), 'success'); }
+        if (da === 'export') { Settings.set('lastBackup', Date.now()); this.download(`delivery-designer-backup-${new Date().toISOString().slice(0, 10)}.json`, this.backupObject()); this.toast(t('exported'), 'success'); }
         if (da === 'import') this.importBackup();
         if (da === 'exportOrders') { this.download(`orders-${new Date().toISOString().slice(0, 10)}.json`, { format: 'delivery-designer/orders', version: 1, orders: this.state.orders }); this.toast(t('exported'), 'success'); }
         if (da === 'exportTemplates') Templates.exportAll();
@@ -483,6 +535,7 @@
       this.show(Settings.get('lastView') || 'designer');
       Designer.open();
       if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { Designer.render(); });
+      this.initOffline();
       window.__appReady = true;
     },
   };

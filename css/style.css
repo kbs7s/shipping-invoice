@@ -251,3 +251,7 @@ html[dir="ltr"] .toasts { transform: translateX(-50%); }
 .doc-page .el-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
 .doc-page .el-table th { font-weight: 700; }
 .doc-page .el-table td, .doc-page .el-table th { overflow-wrap: anywhere; vertical-align: top; }
+
+/* offline / install */
+.toast .toast-action { pointer-events: auto; margin-inline-start: 6px; background: #fff; color: #111827; border-color: transparent; }
+.note.ok { background: color-mix(in srgb, #16a34a 14%, transparent); }
